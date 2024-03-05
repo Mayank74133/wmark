@@ -70,13 +70,16 @@ export default function App() {
     setIsModalVisible(false);
   };
 
-
+  const targetPixelCount = 1080;
+  const pixelRatio = pixelRatio.get();
+  const pixels = targetPixelCount / pixelRatio;
   const onSaveImageAsync = async () => {
     try {
       const localUri = await captureRef(imageRef, {
-        height: 550,
-        width: 320,
+        height: pixels,
+        width: pixels,
         quality: 1,
+        format: 'png'
       });
 
       await MediaLibrary.saveToLibraryAsync(localUri);

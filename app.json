@@ -15,13 +15,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mayank74.snackcd3e789037994bafb4f6d7796b591e5c"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mayank74.snackcd3e789037994bafb4f6d7796b591e5c"
     },
     "web": {
       "favicon": "./assets/favicon.png"
