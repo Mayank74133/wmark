@@ -11,16 +11,10 @@ import Button from '../components/Button';
 import * as SecureStore from 'expo-secure-store';
 import { Link, router } from "expo-router";
 
-export default function App() {
+export default function Page() {
 
-  const [loader, setLoader] = useState(false);
-  const [logo, setLogo] = useState(null);
   const logoRef = useRef(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [showAppOptions, setShowAppOptions] = useState(false);
   const [pickedEmoji, setPickedEmoji] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
 
   useEffect(() => {
     (async () => {
@@ -38,7 +32,7 @@ export default function App() {
         loadLogo();
       } else {
         setPickedEmoji(sessionData);
-        // router.push("/selection");                    // change
+         router.replace("/selection");                    // change
       }
     })();
   }, [])
@@ -56,7 +50,7 @@ export default function App() {
       logoRef.current = result.assets[0].uri.toString();
       await SecureStore.setItemAsync('sessionData', result.assets[0].uri.toString());
       await SecureStore.setItemAsync('wType','Image')
-      router.push("/selection");                                                            // change this too
+      router.replace("/selection");                                                            // change this too
 
     } else {
       alert('You did not select any Logo.');
@@ -87,7 +81,7 @@ export default function App() {
           <Button theme="primary" label="Text Logo"  onPress={()=>{router.push("/inputText")}} />
         </View>
     );
-  }
+  };
 
 const styles = StyleSheet.create({
   container: {

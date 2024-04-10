@@ -10,12 +10,10 @@ import * as SecureStore from 'expo-secure-store';
 import { Link, router } from "expo-router";
 
 
-export default function App() {
+export default function Page() {
 
   const [loader, setLoader] = useState(false);
-  const [logo, setLogo] = useState(null);
   const logoRef = useRef(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [showAppOptions, setShowAppOptions] = useState(false);
   const [pickedEmoji, setPickedEmoji] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -156,10 +154,8 @@ export default function App() {
 const styles = StyleSheet.create({
   item:{
     width:'100vw',
-    // backgroundColor:'green',
     borderColor:'#e3b100',
     textAlign:'center',
-    // color:'white',
     fontSize:20,
     paddingVertical:12,
     marginVertical:4,

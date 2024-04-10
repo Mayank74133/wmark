@@ -14,7 +14,7 @@ const PlaceholderImage = require("../assets/images/image.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
 
-export default function App() {
+export default function Page() {
   const [loader, setLoader] = useState(false);
   const itrRef = useRef(0);
   const temp = useRef(null);
@@ -209,8 +209,7 @@ export default function App() {
                   theme="reset"
                   label="Reset Logo"
                   onPress={() => {
-                    router.push("/");
-                    router.canGoBack(true);
+                    router.replace("/");
                   }}
                 />
               </View>

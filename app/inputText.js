@@ -5,7 +5,7 @@ import * as SecureStore from "expo-secure-store";
 import Button from "../components/Button";
 import { Link, router } from "expo-router";
 
-export default function inputText() {
+export default function Page() {
   const [fSize, setfSize] = useState("20");
   const [bgcolor, setBgcolor] = useState("black");
   const [text, onChangeText] = useState("");

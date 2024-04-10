@@ -15,10 +15,9 @@ import * as SecureStore from 'expo-secure-store';
 import {
   DotIndicator
 } from 'react-native-indicators';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-export default function App() {
+export default function Page() {
 
   const [loader, setLoader] = useState(false);
   const [logo, setLogo] = useState(null);
@@ -198,7 +197,7 @@ export default function App() {
               <Button theme="primary" label="Click" onPress={takePicture} />
             </View>
             <View style={styles.footerContainer2}>
-              <Button theme='reset' label="Reset Logo" onPress={()=>{router.push("/"); router.canGoBack(true);}} />
+              <Button theme='reset' label="Reset Logo" onPress={()=>{router.replace("/"); }} />
               <Link href="/captureImage" asChild>
             <Pressable>
               <Button  label="Toggle Camera" theme='toggle' onPress={toggleCameraType} />
