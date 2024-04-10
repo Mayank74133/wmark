@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "take-a-screenshot",
+    "name": "watermarkApp",
     "slug": "snack-cd3e7890-3799-4baf-b4f6-d7796b591e5c",
+    "scheme": "watermark_DoIt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -32,6 +33,11 @@
       "eas": {
         "projectId": "19ecb52c-f980-4659-91c0-816ce4e4e8eb"
       }
-    }
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-router",
+      "react-native-image-marker"
+    ]
   }
 }

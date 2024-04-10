@@ -3,7 +3,9 @@ import { StyleSheet, FlatList, Image, Platform, Pressable } from 'react-native';
 
 export default function EmojiList({ onSelect }) {
   const [emoji] = useState([
-    require('../assets/images/logo_2.png')
+    require('../assets/images/logo_2.png'),
+    require('../assets/images/logo_1.png'),
+    require('../assets/images/logo_3.png'),
   ]);
 
   return (
