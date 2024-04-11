@@ -15,15 +15,13 @@ import * as SecureStore from 'expo-secure-store';
 import {
   DotIndicator
 } from 'react-native-indicators';
-
+import * as Location from 'expo-location';
+import axios from "axios";
 
 export default function Page() {
 
   const [loader, setLoader] = useState(false);
-  const [logo, setLogo] = useState(null);
   const logoRef = useRef(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [showAppOptions, setShowAppOptions] = useState(false);
   const [pickedEmoji, setPickedEmoji] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
@@ -31,12 +29,55 @@ export default function Page() {
   const [wVal ,setWVal]=useState("");
   const [wPrp,setWPrp]=useState("");
 
+  // Location 
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [lct,setlct]=useState({});
+
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       if (status !== 'granted') {
         alert('Permission to access camera was denied');
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+      console.log(location);
+      try{
+        await axios.get("https://api.geoapify.com/v1/geocode/reverse",{
+          params:{
+            apiKey:"5d740836e3cb44d4896d132256a44e71",
+            lon:location.coords.longitude,
+            lat:location.coords.latitude
+          }
+        }).then((res)=>{
+          console.log(res.data.features[0].properties.formatted);
+            
+          let data={
+              "adl":res.data.features[0].properties.formatted,
+              "pc":res.data.features[0].properties.postcode,
+              "dis":res.data.features[0].properties.state_district,
+              "sta":res.data.features[0].properties.state
+            };
+            setlct(data);
+            console.log(lct);
+        })
+      }catch(err){
+        console.log("error coming is : ",err);
       }
     })();
   }, []);
@@ -99,6 +140,8 @@ export default function Page() {
   }
 
   const takePicture = async () => {
+   
+
     if (this.camera) {
       const photo = await this.camera.takePictureAsync()
       setSelectedImage(photo.uri);
@@ -109,11 +152,9 @@ export default function Page() {
       await onSaveImageAsync();
       setLoader(false);
     }, 3000);
-    // setShowAppOptions(true);
   };
 
   const onReset = () => {
-    setShowAppOptions(false);
     setSelectedImage(null);
   };
 
@@ -183,6 +224,9 @@ export default function Page() {
               >
               </Camera>
             </View> : ''}
+            <View style={styles.locationView}>
+              <Text style={styles.location}>{lct.adl}</Text>
+            </View>
             {pickedEmoji !== null ? (
               <EmojiSticker imageSize={100} stickerSource={pickedEmoji} type={wType} val={wVal} valProp={wPrp} />
             ) : null}
@@ -191,7 +235,6 @@ export default function Page() {
 
 
         {!loader ?
-
           <View style={styles.footerContainer} >
             <View>
               <Button theme="primary" label="Click" onPress={takePicture} />
@@ -205,7 +248,7 @@ export default function Page() {
           </Link>
             </View>
           </View> :
-          <View style={{ backgroundColor: 'white', height: 100, marginTop: 250, marginBottom: 50 }}>
+          <View style={{ backgroundColor: 'white', height: 100, marginTop: 300, marginBottom: 20 }}>
             <DotIndicator color="#00ff12" style={{ backgroundColor: '#26282c' }} />
           </View>
         }
@@ -247,6 +290,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  location:{
+    color:"yellow",
+    width:330,
+    padding:"4px"
+  },
+  locationView:{
+    backgroundColor:"black",
+    width:350,
+    padding:"4px",
+    top:-30
+  }
 });
 
 

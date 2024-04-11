@@ -37,7 +37,13 @@
     "plugins": [
       "expo-secure-store",
       "expo-router",
-      "react-native-image-marker"
+      "react-native-image-marker",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
     ]
   }
 }

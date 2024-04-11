@@ -23,17 +23,6 @@ export default function Page() {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const sessionData = await SecureStore.getItemAsync('sessionData');
-  //     if (sessionData === null) {
-  //       loadLogo();
-  //     } else {
-  //       setPickedEmoji(sessionData);
-  //        router.replace("/selection");                    // change
-  //     }
-  //   })();
-  // }, [])
 
   const loadLogo = async () => {
     setPickedEmoji(null);

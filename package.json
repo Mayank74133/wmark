@@ -10,6 +10,7 @@
     "@expo/vector-icons": "^14.0.0",
     "@react-native-picker/picker": "2.6.1",
     "@types/react": "~18.2.45",
+    "axios": "^1.6.8",
     "expo": "~50.0.8",
     "expo-camera": "~14.0.5",
     "expo-constants": "~15.4.5",
@@ -17,6 +18,7 @@
     "expo-image-manipulator": "~11.8.0",
     "expo-image-picker": "~14.7.1",
     "expo-linking": "~6.2.2",
+    "expo-location": "~16.5.5",
     "expo-media-library": "~15.9.1",
     "expo-router": "~3.4.8",
     "expo-secure-store": "~12.8.1",
@@ -31,6 +33,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-view-shot": "3.8.0",
+    "react-native-web": "~0.19.6",
     "text-to-image": "^5.2.0",
     "typescript": "^5.3.0"
   },
