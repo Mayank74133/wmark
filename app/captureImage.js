@@ -68,12 +68,13 @@ export default function Page() {
           console.log(res.data.features[0].properties.formatted);
             
           let data={
-              "adl":res.data.features[0].properties.formatted,
-              "pc":res.data.features[0].properties.postcode,
-              "dis":res.data.features[0].properties.state_district,
-              "sta":res.data.features[0].properties.state
+              "street":res.data.features[0].properties.street?res.data.features[0].properties.street:"" +", "+ res.data.features[0].properties.name?res.data.features[0].properties.name:""+", "+res.data.features[0].properties.housenumber?res.data.features[0].properties.housenumber:"",
+              "postcode":res.data.features[0].properties.postcode,
+              "city":res.data.features[0].properties.city,
+              "state":res.data.features[0].properties.state,
+              "country":res.data.features[0].properties.country,
             };
-            setlct(data);
+            setTimeout(()=>setlct(data),500);
             console.log(lct);
         })
       }catch(err){
@@ -225,7 +226,11 @@ export default function Page() {
               </Camera>
             </View> : ''}
             <View style={styles.locationView}>
-              <Text style={styles.location}>{lct.adl}</Text>
+              <Text style={styles.location}>{lct.street}</Text>
+              <Text style={styles.location}>{lct.postcode}</Text>
+              <Text style={styles.location}>{lct.city}</Text>
+              <Text style={styles.location}>{lct.state}</Text>
+              <Text style={styles.location}>{lct.country}</Text>
             </View>
             {pickedEmoji !== null ? (
               <EmojiSticker imageSize={100} stickerSource={pickedEmoji} type={wType} val={wVal} valProp={wPrp} />
@@ -270,7 +275,7 @@ const styles = StyleSheet.create({
     paddingTop: 40
   },
   footerContainer: {
-    paddingTop: 200,
+    paddingTop: 265,
     flex: 1 / 3,
     alignItems: 'center',
   },
@@ -296,10 +301,10 @@ const styles = StyleSheet.create({
     padding:"4px"
   },
   locationView:{
-    backgroundColor:"black",
+    // backgroundColor:"black",
     width:350,
     padding:"4px",
-    top:-30
+    top:-100
   }
 });
 
