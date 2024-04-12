@@ -1,94 +1,101 @@
-import { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View,  Text, Pressable, PixelRatio} from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import * as MediaLibrary from 'expo-media-library';
-import { captureRef } from 'react-native-view-shot';
-import { Camera } from 'expo-camera'
-import React from 'react';
-import { Link, router } from 'expo-router';
-import * as ImagePicker from 'expo-image-picker';
-import Button from '../components/Button';
-import ImageViewer from '../components/ImageViewer';
-import EmojiSticker from '../components/EmojiSticker';
-const PlaceholderImage = require('../assets/images/logo_2.png');
-import * as SecureStore from 'expo-secure-store';
-import {
-  DotIndicator
-} from 'react-native-indicators';
-import * as Location from 'expo-location';
+import { useState, useRef, useEffect } from "react";
+import { StyleSheet, View, Text, Pressable, PixelRatio } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as MediaLibrary from "expo-media-library";
+import { captureRef } from "react-native-view-shot";
+import { Camera } from "expo-camera";
+import React from "react";
+import { Link, router } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
+import Button from "../components/Button";
+import ImageViewer from "../components/ImageViewer";
+import EmojiSticker from "../components/EmojiSticker";
+const PlaceholderImage = require("../assets/images/logo_2.png");
+import * as SecureStore from "expo-secure-store";
+import { DotIndicator } from "react-native-indicators";
+import * as Location from "expo-location";
 import axios from "axios";
-
+import { FontAwesome6, AntDesign } from "@expo/vector-icons";
+import {Dimensions} from 'react-native';
 export default function Page() {
-
   const [loader, setLoader] = useState(false);
   const logoRef = useRef(null);
   const [pickedEmoji, setPickedEmoji] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
-  const [wType,setWType]=useState("");
-  const [wVal ,setWVal]=useState("");
-  const [wPrp,setWPrp]=useState("");
+  const [wType, setWType] = useState("");
+  const [wVal, setWVal] = useState("");
+  const [wPrp, setWPrp] = useState("");
+  const [wwidth,setWwidth]=useState(0);
+  const [wheight,setWheight]=useState(0);
 
-  // Location 
+  // Location
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [lct,setlct]=useState({});
-
+  const [lct, setlct] = useState({});
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access camera was denied');
+      if (status !== "granted") {
+        alert("Permission to access camera was denied");
       }
     })();
   }, []);
 
   useEffect(() => {
+     setWwidth(Dimensions.get('window').width);
+     setWheight(Dimensions.get('window').height);
+     
+     
     (async () => {
-      
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
         return;
       }
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
-      console.log(location);
-      try{
-        await axios.get("https://api.geoapify.com/v1/geocode/reverse",{
-          params:{
-            apiKey:"5d740836e3cb44d4896d132256a44e71",
-            lon:location.coords.longitude,
-            lat:location.coords.latitude
-          }
-        }).then((res)=>{
-          console.log(res.data.features[0].properties.formatted);
-            
-          let data={
-              "street":res.data.features[0].properties.street?res.data.features[0].properties.street:"" +", "+ res.data.features[0].properties.name?res.data.features[0].properties.name:""+", "+res.data.features[0].properties.housenumber?res.data.features[0].properties.housenumber:"",
-              "postcode":res.data.features[0].properties.postcode,
-              "city":res.data.features[0].properties.city,
-              "state":res.data.features[0].properties.state,
-              "country":res.data.features[0].properties.country,
+      try {
+        await axios
+          .get("https://api.geoapify.com/v1/geocode/reverse", {
+            params: {
+              apiKey: "5d740836e3cb44d4896d132256a44e71",
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            },
+          })
+          .then((res) => {
+
+            let data = {
+              street: res.data.features[0].properties.street
+                ? res.data.features[0].properties.street
+                : "" + ", " + res.data.features[0].properties.name
+                ? res.data.features[0].properties.name
+                : "" + ", " + res.data.features[0].properties.housenumber
+                ? res.data.features[0].properties.housenumber
+                : "",
+              postcode: res.data.features[0].properties.postcode,
+              city: res.data.features[0].properties.city,
+              state: res.data.features[0].properties.state,
+              country: res.data.features[0].properties.country,
             };
-            setTimeout(()=>setlct(data),500);
-            console.log(lct);
-        })
-      }catch(err){
-        console.log("error coming is : ",err);
+            setTimeout(() => setlct(data), 500);
+          });
+      } catch (err) {
+        console.log("error coming is : ", err);
       }
     })();
   }, []);
 
   useEffect(() => {
     (async () => {
-      const sessionData = await SecureStore.getItemAsync('sessionData');
-      const tempData=await SecureStore.getItemAsync('Property');
-      const tempData1=await SecureStore.getItemAsync('markText');
-      const tempData2=await SecureStore.getItemAsync('wType');
+      const sessionData = await SecureStore.getItemAsync("sessionData");
+      const tempData = await SecureStore.getItemAsync("Property");
+      const tempData1 = await SecureStore.getItemAsync("markText");
+      const tempData2 = await SecureStore.getItemAsync("wType");
 
       setWPrp(JSON.parse(tempData));
       setWVal(tempData1);
@@ -100,7 +107,7 @@ export default function Page() {
         setPickedEmoji(sessionData);
       }
     })();
-  }, [])
+  }, []);
 
   const loadLogo = async () => {
     setPickedEmoji(null);
@@ -110,15 +117,16 @@ export default function Page() {
     });
 
     if (!result.canceled) {
-
       setPickedEmoji(result.assets[0].uri.toString());
       logoRef.current = result.assets[0].uri.toString();
-      await SecureStore.setItemAsync('sessionData', result.assets[0].uri.toString());
-
+      await SecureStore.setItemAsync(
+        "sessionData",
+        result.assets[0].uri.toString()
+      );
     } else {
-      alert('You did not select any Logo.');
+      alert("You did not select any Logo.");
     }
-  }
+  };
 
   const toggleCameraType = () => {
     setCameraType(
@@ -136,10 +144,8 @@ export default function Page() {
   }
 
   const takePicture = async () => {
-   
-
     if (this.camera) {
-      const photo = await this.camera.takePictureAsync()
+      const photo = await this.camera.takePictureAsync();
       setSelectedImage(photo.uri);
     }
     setLoader(true);
@@ -154,16 +160,14 @@ export default function Page() {
     setSelectedImage(null);
   };
 
-  const targetPixelCount = 1080;
-  const pixelRatio =PixelRatio.get();
-  const pixels=targetPixelCount/pixelRatio;
+
   const onSaveImageAsync = async () => {
     try {
       const localUri = await captureRef(imageRef, {
-        height: pixels,
-        width: pixels,
+        height: wheight,
+        width: wwidth,
         quality: 1,
-        format: 'png'
+        format: "png",
       });
 
       await MediaLibrary.saveToLibraryAsync(localUri);
@@ -176,134 +180,156 @@ export default function Page() {
     onReset();
   };
 
-
-
   return (
-    <>
-      {!pickedEmoji ?
-        <View style={{
-          marginTop: 350,
-        }}>
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 18,
-              alignSelf: 'center',
-              fontWeight: '600'
-            }}
-          >Please Upload a Logo </Text>
-          <Button theme="primary" label="Upload Logo" onPress={loadLogo} />
-
-        </View>
-        : ''
-
-      }
-      {pickedEmoji ? <GestureHandlerRootView style={styles.container}>
-
-        <View style={styles.imageContainer}>
-          <View ref={imageRef} collapsable={false}>
-            {selectedImage ?
-              <ImageViewer
-                // ref={imageRef}
-                style={styles.imageContainer}
-                placeholderImageSource={PlaceholderImage}
-                selectedImage={selectedImage}
-              />
-              : ''}
-            {!selectedImage ? <View style={{
-              height: 630,
-              width: 350
-            }}>
+    <GestureHandlerRootView style={styles.container}>
+      <View style={styles.imageContainer}>
+        <View ref={imageRef} collapsable={false}>
+          {selectedImage ? (
+            <ImageViewer
+              // ref={imageRef}
+              style={styles.imageContainer}
+              placeholderImageSource={PlaceholderImage}
+              selectedImage={selectedImage}
+            />
+          ) : (
+            ""
+          )}
+          {!selectedImage ? (
+            <View
+              style={{
+                height: wheight,
+                width: wwidth,
+              }}
+            >
               <Camera
-                ref={ref => {
+                ref={(ref) => {
                   this.camera = ref;
                 }}
                 style={styles.imageContainer}
                 type={cameraType}
-              >
-              </Camera>
-            </View> : ''}
-            <View style={styles.locationView}>
-              <Text style={styles.location}>{lct.street}</Text>
-              <Text style={styles.location}>{lct.postcode}</Text>
-              <Text style={styles.location}>{lct.city}</Text>
-              <Text style={styles.location}>{lct.state}</Text>
-              <Text style={styles.location}>{lct.country}</Text>
+              ></Camera>
             </View>
-            {pickedEmoji !== null ? (
-              <EmojiSticker imageSize={100} stickerSource={pickedEmoji} type={wType} val={wVal} valProp={wPrp} />
-            ) : null}
+          ) : (
+            ""
+          )}
+         {(!loader && pickedEmoji) ?<View> 
+          <View style={styles.locationView}>
+            <Text style={styles.location}>{lct.street}</Text>
+            <Text style={styles.location}>{lct.postcode}</Text>
+            <Text style={styles.location}>{lct.city}</Text>
+            <Text style={styles.location}>{lct.state}</Text>
+            <Text style={styles.location}>{lct.country}</Text>
           </View>
+            <EmojiSticker
+              imageSize={100}
+              stickerSource={pickedEmoji}
+              type={wType}
+              val={wVal}
+              valProp={wPrp}
+            />
+            </View>
+      :""}
+      
+          </View>
+      {!loader ? (
+        <View style={styles.footerContainer2}>
+          
+            <View
+              style={{
+                padding: 9,
+                borderWidth: 2,
+                borderColor: "white",
+                borderRadius: 100,
+              }}
+            >
+              <AntDesign name="upload" size={20} color="white" />
+            </View>
+            <View
+            style={{
+              padding: 12,
+              borderWidth: 4,
+              borderColor: "white",
+              borderRadius: 100,
+            }}
+          >
+            <FontAwesome6 name="camera" color="white" size={22} />
+          </View>
+            <Link href="/captureImage" asChild>
+              <Pressable>
+                <View
+                  style={{
+                    padding: 9,
+                    borderWidth: 2,
+                    borderColor: "white",
+                    borderRadius: 100,
+                  }}
+                >
+                  <FontAwesome6 name="camera-rotate" size={20} color="white" />
+                </View>
+              </Pressable>
+            </Link>
         </View>
-
-
-        {!loader ?
-          <View style={styles.footerContainer} >
-            <View>
-              <Button theme="primary" label="Click" onPress={takePicture} />
-            </View>
-            <View style={styles.footerContainer2}>
-              <Button theme='reset' label="Reset Logo" onPress={()=>{router.replace("/"); }} />
-              <Link href="/captureImage" asChild>
-            <Pressable>
-              <Button  label="Toggle Camera" theme='toggle' onPress={toggleCameraType} />
-            </Pressable>
-          </Link>
-            </View>
-          </View> :
-          <View style={{ backgroundColor: 'white', height: 100, marginTop: 300, marginBottom: 20 }}>
-            <DotIndicator color="#00ff12" style={{ backgroundColor: '#26282c' }} />
-          </View>
-        }
-
-      </GestureHandlerRootView > : ''
-      }
-    </>
+      ) : (
+        <View
+          style={{
+            backgroundColor: "white",
+            height: 100,
+            marginTop: 300,
+            marginBottom: 20,
+          }}
+        >
+          <DotIndicator
+            color="#00ff12"
+            style={{ backgroundColor: "#000" }}
+          />
+        </View>
+      )}
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
-    alignItems: 'center',
+    backgroundColor: "#25292e",
+    alignItems: "center",
   },
   imageContainer: {
     flex: 1,
-    paddingTop: 40
+    paddingTop: 40,
   },
   footerContainer: {
     paddingTop: 265,
     flex: 1 / 3,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerContainer2: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop:20,
-    gap:50
+    width:400,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent:"space-around",
+    marginBottom:30
   },
   optionsContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 80,
   },
   optionsRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
   },
-  location:{
-    color:"yellow",
-    width:330,
-    padding:"4px"
+  location: {
+    color: "yellow",
+    width: 330,
+    padding: "4px",
   },
-  locationView:{
+  locationView: {
     // backgroundColor:"black",
-    width:350,
-    padding:"4px",
-    top:-100
-  }
+    width: 350,
+    padding: "4px",
+    top: -210,
+  },
 });
-
-

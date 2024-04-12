@@ -47,7 +47,7 @@ export default function EmojiSticker({ imageSize, stickerSource ,type ,val ,valP
 
   return (
     <GestureDetector gesture={drag}>
-      <Animated.View style={[containerStyle, { top: -376 }]}>
+      <Animated.View style={[containerStyle, { top: -300  }]}>
         {type=="TXT"?<Text style={valProp}>{val}</Text>: <Animated.Image
         source={{ uri: stickerSource }}
         resizeMode="contain"
