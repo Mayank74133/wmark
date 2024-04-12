@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View,  Text, Pressable} from 'react-native';
+import { StyleSheet, View,  Text, Pressable, PixelRatio} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as MediaLibrary from 'expo-media-library';
 import { captureRef } from 'react-native-view-shot';
@@ -118,7 +118,6 @@ export default function Page() {
     } else {
       alert('You did not select any Logo.');
     }
-
   }
 
   const toggleCameraType = () => {
@@ -128,10 +127,6 @@ export default function Page() {
         : Camera.Constants.Type.back
     );
   };
-  // useEffect(() => {
-  //   loadLogo();
-  // }, []);
-
 
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const imageRef = useRef();
@@ -159,11 +154,14 @@ export default function Page() {
     setSelectedImage(null);
   };
 
+  const targetPixelCount = 1080;
+  const pixelRatio =PixelRatio.get();
+  const pixels=targetPixelCount/pixelRatio;
   const onSaveImageAsync = async () => {
     try {
       const localUri = await captureRef(imageRef, {
-        height: 630,
-        width: 350,
+        height: pixels,
+        width: pixels,
         quality: 1,
         format: 'png'
       });
