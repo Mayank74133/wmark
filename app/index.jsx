@@ -8,11 +8,19 @@ import * as ImagePicker from 'expo-image-picker';
 import Button from '../components/Button';
 import * as SecureStore from 'expo-secure-store';
 import { Link, router } from "expo-router";
-
+import * as Location from "expo-location";
+import axios from "axios"
+import { ImageBackground } from 'react-native';
+import bgImg from "../public/images/background.jpg"
 export default function Page() {
 
   const logoRef = useRef(null);
   const [pickedEmoji, setPickedEmoji] = useState(null);
+
+    // Location
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [lct, setlct] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -21,8 +29,52 @@ export default function Page() {
         alert('Permission to access camera was denied');
       }
     })();
-  }, []);
 
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+      try {
+        await axios
+          .get("https://api.geoapify.com/v1/geocode/reverse", {
+            params: {
+              apiKey: "5d740836e3cb44d4896d132256a44e71",
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            },
+          })
+          .then((res) => {
+            let data = {
+              street: res.data.features[0].properties.street
+                ? res.data.features[0].properties.street
+                : "" + ", " + res.data.features[0].properties.name
+                ? res.data.features[0].properties.name
+                : "" + ", " + res.data.features[0].properties.housenumber
+                ? res.data.features[0].properties.housenumber
+                : "",
+              postcode: res.data.features[0].properties.postcode,
+              city: res.data.features[0].properties.city,
+              state: res.data.features[0].properties.state,
+              country: res.data.features[0].properties.country,
+            };
+    
+            setTimeout(async() => {
+              setlct(data);
+              await SecureStore.setItemAsync('datalct',JSON.stringify(data));
+            }, 500);
+          });
+      } catch (err) {
+        console.log("error coming is : ", err);
+      }
+    })();
+
+  },[])
 
   const loadLogo = async () => {
     setPickedEmoji(null);
@@ -52,19 +104,20 @@ export default function Page() {
   }
 
   return (
-        <View style={{
-          marginTop: 350,
-        }}>
+        <View style={styles.container}>
+        <ImageBackground source={bgImg} resizeMode='cover' style={styles.imageContainer}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 30,
               marginBottom: 18,
               alignSelf: 'center',
-              fontWeight: '600'
+              fontWeight: '600',
+              color:'white'
             }}
           >Please Upload a Logo </Text>
           <Button theme="primary" label="Upload Logo" onPress={loadLogo} />
           <Button theme="primary" label="Text Logo"  onPress={()=>{router.push("/inputText")}} />
+          </ImageBackground>
         </View>
     );
   };
@@ -77,7 +130,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    paddingTop: 40
+    justifyContent:'center'
   },
   footerContainer: {
     paddingTop: 200,

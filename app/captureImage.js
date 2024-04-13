@@ -13,11 +13,10 @@ import EmojiSticker from "../components/EmojiSticker";
 const PlaceholderImage = require("../assets/images/logo_2.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
-import * as Location from "expo-location";
 import axios from "axios";
 import { FontAwesome6, AntDesign } from "@expo/vector-icons";
-import {Dimensions} from 'react-native';
-export default function Page() {
+import { Dimensions } from "react-native";
+export default function Page(props) {
   const [loader, setLoader] = useState(false);
   const logoRef = useRef(null);
   const [pickedEmoji, setPickedEmoji] = useState(null);
@@ -26,8 +25,8 @@ export default function Page() {
   const [wType, setWType] = useState("");
   const [wVal, setWVal] = useState("");
   const [wPrp, setWPrp] = useState("");
-  const [wwidth,setWwidth]=useState(0);
-  const [wheight,setWheight]=useState(0);
+  const [wwidth, setWwidth] = useState(0);
+  const [wheight, setWheight] = useState(0);
 
   // Location
   const [location, setLocation] = useState(null);
@@ -44,50 +43,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-     setWwidth(Dimensions.get('window').width);
-     setWheight(Dimensions.get('window').height);
-     
-     
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-
-      try {
-        await axios
-          .get("https://api.geoapify.com/v1/geocode/reverse", {
-            params: {
-              apiKey: "5d740836e3cb44d4896d132256a44e71",
-              lon: location.coords.longitude,
-              lat: location.coords.latitude,
-            },
-          })
-          .then((res) => {
-
-            let data = {
-              street: res.data.features[0].properties.street
-                ? res.data.features[0].properties.street
-                : "" + ", " + res.data.features[0].properties.name
-                ? res.data.features[0].properties.name
-                : "" + ", " + res.data.features[0].properties.housenumber
-                ? res.data.features[0].properties.housenumber
-                : "",
-              postcode: res.data.features[0].properties.postcode,
-              city: res.data.features[0].properties.city,
-              state: res.data.features[0].properties.state,
-              country: res.data.features[0].properties.country,
-            };
-            setTimeout(() => setlct(data), 500);
-          });
-      } catch (err) {
-        console.log("error coming is : ", err);
-      }
-    })();
+    setWwidth(Dimensions.get("window").width - 20);
+    setWheight(Dimensions.get("window").height - 200);
   }, []);
 
   useEffect(() => {
@@ -96,6 +53,9 @@ export default function Page() {
       const tempData = await SecureStore.getItemAsync("Property");
       const tempData1 = await SecureStore.getItemAsync("markText");
       const tempData2 = await SecureStore.getItemAsync("wType");
+      const templocation = await SecureStore.getItemAsync("datalct");
+      setlct(JSON.parse(templocation));
+      console.log(templocation);
 
       setWPrp(JSON.parse(tempData));
       setWVal(tempData1);
@@ -160,7 +120,6 @@ export default function Page() {
     setSelectedImage(null);
   };
 
-
   const onSaveImageAsync = async () => {
     try {
       const localUri = await captureRef(imageRef, {
@@ -182,8 +141,12 @@ export default function Page() {
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={styles.imageContainer}>
-        <View ref={imageRef} collapsable={false}>
+      <View>
+        <View
+          ref={imageRef}
+          collapsable={false}
+          style={{ height: wheight, marginBottom: 10 }}
+        >
           {selectedImage ? (
             <ImageViewer
               // ref={imageRef}
@@ -192,9 +155,6 @@ export default function Page() {
               selectedImage={selectedImage}
             />
           ) : (
-            ""
-          )}
-          {!selectedImage ? (
             <View
               style={{
                 height: wheight,
@@ -209,81 +169,90 @@ export default function Page() {
                 type={cameraType}
               ></Camera>
             </View>
+          )}
+          {!loader ? (
+            <View>
+              <View style={styles.locationView}>
+                <Text style={styles.location}>{lct.street}</Text>
+                <Text style={styles.location}>{lct.postcode}</Text>
+                <Text style={styles.location}>{lct.city}</Text>
+                <Text style={styles.location}>{lct.state}</Text>
+                <Text style={styles.location}>{lct.country}</Text>
+              </View>
+              <EmojiSticker
+                imageSize={100}
+                stickerSource={pickedEmoji}
+                type={wType}
+                val={wVal}
+                valProp={wPrp}
+              />
+            </View>
           ) : (
             ""
           )}
-         {(!loader && pickedEmoji) ?<View> 
-          <View style={styles.locationView}>
-            <Text style={styles.location}>{lct.street}</Text>
-            <Text style={styles.location}>{lct.postcode}</Text>
-            <Text style={styles.location}>{lct.city}</Text>
-            <Text style={styles.location}>{lct.state}</Text>
-            <Text style={styles.location}>{lct.country}</Text>
-          </View>
-            <EmojiSticker
-              imageSize={100}
-              stickerSource={pickedEmoji}
-              type={wType}
-              val={wVal}
-              valProp={wPrp}
-            />
-            </View>
-      :""}
-      
-          </View>
-      {!loader ? (
-        <View style={styles.footerContainer2}>
-          
-            <View
-              style={{
-                padding: 9,
-                borderWidth: 2,
-                borderColor: "white",
-                borderRadius: 100,
+        </View>
+
+        {!loader ? (
+          <View style={styles.footerContainer2}>
+            <Pressable
+              onPress={() => {
+                router.replace("/");
               }}
             >
-              <AntDesign name="upload" size={20} color="white" />
-            </View>
-            <View
-            style={{
-              padding: 12,
-              borderWidth: 4,
-              borderColor: "white",
-              borderRadius: 100,
-            }}
-          >
-            <FontAwesome6 name="camera" color="white" size={22} />
-          </View>
-            <Link href="/captureImage" asChild>
-              <Pressable>
+              <View
+                style={{
+                  padding: 9,
+                  borderWidth: 2,
+                  borderRadius: 11,
+                  borderColor: "yellow",
+                }}
+              >
+                <AntDesign name="upload" size={20} color="white" />
+              </View>
+            </Pressable>
+            <Pressable onPress={takePicture}>
+              <View
+                style={{
+                  padding: 5,
+                  borderWidth: 2,
+                  borderColor: "yellow",
+                  borderRadius: 100,
+                }}
+              >
                 <View
                   style={{
-                    padding: 9,
+                    padding: 12,
                     borderWidth: 2,
                     borderColor: "white",
                     borderRadius: 100,
                   }}
                 >
-                  <FontAwesome6 name="camera-rotate" size={20} color="white" />
+                  <FontAwesome6 name="camera" color="white" size={26} />
                 </View>
-              </Pressable>
-            </Link>
-        </View>
-      ) : (
-        <View
-          style={{
-            backgroundColor: "white",
-            height: 100,
-            marginTop: 300,
-            marginBottom: 20,
-          }}
-        >
-          <DotIndicator
-            color="#00ff12"
-            style={{ backgroundColor: "#000" }}
-          />
-        </View>
-      )}
+              </View>
+            </Pressable>
+            <Pressable onPress={toggleCameraType}>
+              <View
+                style={{
+                  padding: 9,
+                  borderWidth: 2,
+                  borderRadius: 11,
+                  borderColor: "yellow",
+                }}
+              >
+                <FontAwesome6 name="camera-rotate" size={20} color="white" />
+              </View>
+            </Pressable>
+          </View>
+        ) : (
+          <View
+            style={{
+              height: 100,
+            }}
+          >
+            <DotIndicator color="#00ff12" style={{ backgroundColor: "#000" }} />
+          </View>
+        )}
       </View>
     </GestureHandlerRootView>
   );
@@ -297,7 +266,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 5,
+    backgroundColor: "red",
   },
   footerContainer: {
     paddingTop: 265,
@@ -305,12 +275,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footerContainer2: {
-    width:400,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:"space-around",
-    marginBottom:30
+    justifyContent: "space-around",
+    marginBottom: 30,
   },
   optionsContainer: {
     position: "absolute",
@@ -327,9 +296,9 @@ const styles = StyleSheet.create({
     padding: "4px",
   },
   locationView: {
-    // backgroundColor:"black",
     width: 350,
-    padding: "4px",
-    top: -210,
+    padding: 4,
+    paddingLeft: 10,
+    top: -120,
   },
 });
