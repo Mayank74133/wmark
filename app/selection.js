@@ -1,196 +1,123 @@
-import { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View,  Text, Pressable } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
-import { captureRef } from 'react-native-view-shot';
-import { Camera } from 'expo-camera'
-import React from 'react';
-import * as ImagePicker from 'expo-image-picker';
-import Button from '../components/Button';
-import * as SecureStore from 'expo-secure-store';
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import React from "react";
+import { Image } from "expo-image";
 import { Link, router } from "expo-router";
-
+import cImg from "../public/images/camera.jpg";
+import gImg from "../public/images/gallery.jpg";
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function Page() {
-
-  const [loader, setLoader] = useState(false);
-  const logoRef = useRef(null);
-  const [showAppOptions, setShowAppOptions] = useState(false);
-  const [pickedEmoji, setPickedEmoji] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access camera was denied');
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const sessionData = await SecureStore.getItemAsync('sessionData');
-      if (sessionData === null) {
-        loadLogo();
-      } else {
-        setPickedEmoji(sessionData);
-      }
-    })();
-  }, [])
-
-  const loadLogo = async () => {
-    setPickedEmoji(null);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-
-      setPickedEmoji(result.assets[0].uri.toString());
-      logoRef.current = result.assets[0].uri.toString();
-      await SecureStore.setItemAsync('sessionData', result.assets[0].uri.toString());
-
-    } else {
-      alert('You did not select any Logo.');
-    }
-
-  }
-
-  const toggleCameraType = () => {
-    setCameraType(
-      cameraType === Camera.Constants.Type.back
-        ? Camera.Constants.Type.front
-        : Camera.Constants.Type.back
-    );
-  };
-  // useEffect(() => {
-  //   loadLogo();
-  // }, []);
-
-
-  const [status, requestPermission] = MediaLibrary.usePermissions();
-  const imageRef = useRef();
-
-  if (status === null) {
-    requestPermission();
-  }
-
-  const takePicture = async () => {
-    if (this.camera) {
-      const photo = await this.camera.takePictureAsync()
-      setSelectedImage(photo.uri);
-    }
-    setLoader(true);
-
-    setTimeout(async () => {
-      await onSaveImageAsync();
-      setLoader(false);
-    }, 3000);
-    // setShowAppOptions(true);
-  };
-
-  const onReset = () => {
-    setShowAppOptions(false);
-    setSelectedImage(null);
-  };
-
-  const onSaveImageAsync = async () => {
-    try {
-      const localUri = await captureRef(imageRef, {
-        height: 630,
-        width: 350,
-        quality: 1,
-        format: 'png'
-      });
-
-      await MediaLibrary.saveToLibraryAsync(localUri);
-      if (localUri) {
-        // alert("Saved!");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-    onReset();
-  };
-
-  const handleChange=()=>{
-    router.push("/imageSelector")
-    console.log("Pressed hua h ");
-    
-  }
-
   return (
-        <View style={{
-          marginTop: 250,
-        }}>
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 18,
-              alignSelf: 'center',
-              fontWeight: '600'
-            }}
-          >Select a Method  </Text>
+    <View style={{
+      flex:1
+    }}>
+ 
+      <View
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around",
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginHorizontal:10,
+            gap:35,
+            backgroundColor:'#F7F6F5',
+            flex:1,
+            justifyContent:"center",
+            alignItems:"center"
+          }}
+        >
+          <Image source={gImg} style={styles.Image} />
+
           <Link href="/imageSelector" asChild>
-          <Pressable  >
-          <Text style={styles.item}>Select Image</Text> 
-          </Pressable>
-        </Link>
-
-          <Link href="/captureImage" asChild>
-            <Pressable >
-            <Text style={styles.item}>Capture Image</Text> 
-
+            <Pressable style={styles.btnContainer}>
+              <MaterialIcons
+                name="browse-gallery"
+                size={25}
+                color="#fff"
+                style={{ marginTop: 7, marginLeft: 15 }}
+              />
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingVertical: 6,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  marginTop: 1,
+                  color: "#fff",
+                }}
+              >
+                Browse Image{" "}
+              </Text>
             </Pressable>
           </Link>
-
         </View>
-      
-    );
-  }
+
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            gap:35,
+            marginHorizontal:10,
+            backgroundColor:'#ECEAE8',
+            flex:1,
+            justifyContent:"center",
+            alignItems:"center"
+          }}
+        >
+          <Image source={cImg} style={styles.Image} />
+          <Link href="/captureImage" asChild>
+            <Pressable style={styles.btnContainer}>
+              <FontAwesome5
+                name="camera-retro"
+                size={25}
+                color="#fff"
+                style={{ marginTop: 7, marginLeft: 13 }}
+              />
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingVertical: 6,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  marginTop: 1,
+                  color: "#fff",
+                }}
+              >
+                Capture Image
+              </Text>
+            </Pressable>
+          </Link>
+        </View>
+      </View>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
-  item:{
-    width:'100vw',
-    borderColor:'#e3b100',
-    textAlign:'center',
-    fontSize:20,
-    paddingVertical:12,
-    marginVertical:4,
-    marginHorizontal:50,
-    borderWidth:4,
-    borderRadius:15
+  btnContainer: {
+    textAlign: "center",
+    paddingTop: 2,
+    width: 180,
+    borderRadius: 14,
+    height: 50,
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+    borderColor: "#0073ff",
+    borderWidth: 3,
+    backgroundColor: "#0073cf",
+    marginVertical: 45,
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#25292e',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1,
-    paddingTop: 40
-  },
-  footerContainer: {
-    paddingTop: 200,
-    flex: 1 / 3,
-    alignItems: 'center',
-  },
-  footerContainer2: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  optionsContainer: {
-    position: 'absolute',
-    bottom: 80,
-  },
-  optionsRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
+  Image: {
+    height: 150,
+    width: 150,
+    borderRadius: 100,
   },
 });
-
-

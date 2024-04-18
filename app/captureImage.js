@@ -5,19 +5,15 @@ import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { Camera } from "expo-camera";
 import React from "react";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
-import Button from "../components/Button";
 import ImageViewer from "../components/ImageViewer";
 import EmojiSticker from "../components/EmojiSticker";
 const PlaceholderImage = require("../assets/images/logo_2.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
-import axios from "axios";
 import { FontAwesome6, AntDesign } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
-import { RNCamera } from 'react-native-camera';
-
 
 export default function Page(props) {
   const [loader, setLoader] = useState(false);
@@ -30,6 +26,7 @@ export default function Page(props) {
   const [wPrp, setWPrp] = useState("");
   const [wwidth, setWwidth] = useState(0);
   const [wheight, setWheight] = useState(0);
+  const [af,setAf]=useState(0);
 
   // Location
   const [lct, setlct] = useState({});
@@ -43,6 +40,11 @@ export default function Page(props) {
     })();
   }, []);
 
+  useEffect(()=>{
+    setTimeout(()=>{
+      setAf(0);
+    },500);
+  },[af])
   useEffect(() => {
     setWwidth(Dimensions.get("window").width - 20);
     setWheight(Dimensions.get("window").height - 200);
@@ -150,48 +152,48 @@ export default function Page(props) {
         >
           {selectedImage ? (
             <ImageViewer
-              // ref={imageRef}
               style={styles.imageContainer}
               placeholderImageSource={PlaceholderImage}
               selectedImage={selectedImage}
             />
           ) : (
-            <View
-              style={{
-                height: wheight,
-                width: wwidth,
-              }}
-            >
-              <Camera
-                ref={(ref) => {
-                  this.camera = ref;
+            <Pressable onPress={()=>setAf(!af)}>
+              <View
+                style={{
+                  height: wheight,
+                  width: wwidth,
                 }}
-                style={styles.imageContainer}
-                type={cameraType}
-                responsiveOrientationWhenOrientationLocked = {true}
-              />
-            </View>
-          )}
-          {!loader ? (
-            <View>
-              <View style={styles.locationView}>
-                <Text style={styles.location}>{lct.street}</Text>
-                <Text style={styles.location}>{lct.postcode}</Text>
-                <Text style={styles.location}>{lct.city}</Text>
-                <Text style={styles.location}>{lct.state}</Text>
-                <Text style={styles.location}>{lct.country}</Text>
+              >
+                <Camera
+                  ref={(ref) => {
+                    this.camera = ref;
+                  }}
+                  style={styles.imageContainer}
+                  isActive={true}
+                  autoFocus={af}
+                  type={cameraType}
+                  ResponsiveOrientationChanged={true}
+                  responsiveOrientationWhenOrientationLocked={true}
+                />
               </View>
-              <EmojiSticker
-                imageSize={100}
-                stickerSource={pickedEmoji}
-                type={wType}
-                val={wVal}
-                valProp={wPrp}
-              />
-            </View>
-          ) : (
-            ""
+            </Pressable>
           )}
+          <View>
+            <View style={styles.locationView}>
+              <Text style={styles.location}>{lct.street}</Text>
+              <Text style={styles.location}>{lct.postcode}</Text>
+              <Text style={styles.location}>{lct.city}</Text>
+              <Text style={styles.location}>{lct.state}</Text>
+              <Text style={styles.location}>{lct.country}</Text>
+            </View>
+            <EmojiSticker
+              imageSize={100}
+              stickerSource={pickedEmoji}
+              type={wType}
+              val={wVal}
+              valProp={wPrp}
+            />
+          </View>
         </View>
 
         {!loader ? (

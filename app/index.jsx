@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, Text, Pressable, Button } from "react-native";
 import * as MediaLibrary from "expo-media-library";
@@ -10,7 +11,7 @@ import { Link, router } from "expo-router";
 import * as Location from "expo-location";
 import axios from "axios";
 import { ImageBackground } from "react-native";
-import bgImg from "../public/images/12345.jpg";
+import bgImg from "../public/images/1234.jpeg";
 import bg_img from "../public/images/bg_image.jpg";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -103,85 +104,96 @@ export default function Page() {
   }
 
   return (
-    <ImageBackground
-      source={bgImg}
-      // resizeMode="cover"
-      style={styles.imageContainer}
-    >
-      <View style={styles.container}>
-        <View
+    <View style={{ flex: 1 }}>
+      <View>
+        <Text
           style={{
-            margin: 2,
-            display: "flex",
-            gap: 10,
+            fontSize: 27,
+            fontWeight: "700",
+            color: "black",
+            textAlign: "center",
+            marginTop: 90,
           }}
         >
-          <Text
-            style={{
-              fontSize: 27,
-              fontWeight: "700",
-              color: "yellow",
-              textAlign: "center",
-              marginTop:90
-            }}
-          >
-            "WaterMark Wise, Right Rise!
-          </Text>
-          <Text
-            style={{
-              fontSize: 25,
-              fontWeight: "700",
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            Secure It With A Signature"
-          </Text>
-        </View>
-        <View style={{
-          display:'flex',
-          gap:10,
-          marginBottom:25
-        }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "600",
-              color: "turquoise",
-              textAlign: "center",
-            }}
-          >
-            Upload Your image, customize your watermark, and apply it with a
-            click.
-          </Text>
-          <View style={styles.mainBtnContainer}>
-            <Pressable style={styles.btnContainer} onPress={loadLogo}>
-              <AntDesign
-                name="cloudupload"
-                size={30}
-                color="black"
-                style={{ marginTop: 7, marginLeft: 30 }}
-              />
-              <Text style={styles.btn}>Upload </Text>
-            </Pressable>
-            <Pressable
-              style={styles.btnContainer}
-              onPress={() => {
-                router.push("/inputText");
+          "WaterMark Wise, Right Rise!
+        </Text>
+        <Text
+          style={{
+            fontSize: 25,
+            fontWeight: "700",
+            color: "black",
+            textAlign: "center",
+          }}
+        >
+          Secure It With A Signature"
+        </Text>
+      </View>
+
+      <View style={styles.container}>
+        <ImageBackground
+          source={bgImg}
+          style={styles.imageContainer}
+        />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "600",
+            color: "black",
+            textAlign: "center",
+            marginBottom: 18,
+          }}
+        >
+          Upload Your logo or create your watermark, and apply it with a click.
+        </Text>
+        <View style={styles.mainBtnContainer}>
+          <Pressable style={styles.btnContainer} onPress={loadLogo}>
+            <AntDesign
+              name="cloudupload"
+              size={30}
+              color="#fff"
+              style={{ marginTop: 7, marginLeft: 25 }}
+            />
+            <Text
+              style={{
+                fontSize: 18,
+                paddingVertical: 6,
+                fontWeight: "700",
+                textAlign: "center",
+                marginTop: 3,
+                color:'#fff'
               }}
             >
-              <MaterialIcons
-                name="draw"
-                size={30}
-                color="black"
-                style={{ marginTop: 7, marginLeft: 40 }}
-              />
-              <Text style={styles.btn}>Text </Text>
-            </Pressable>
-          </View>
+              Upload{" "}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={styles.btnContainer1}
+            onPress={() => {
+              router.push("/inputText");
+            }}
+          >
+            <MaterialIcons
+              name="draw"
+              size={30}
+              color="#fff"
+              style={{ marginTop: 7, marginLeft: 35 }}
+            />
+            <Text
+              style={{
+                fontSize: 18,
+                paddingVertical: 6,
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: 3,
+                color:'#fff'
+              }}
+            >
+              Text{" "}
+            </Text>
+          </Pressable>
         </View>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
@@ -189,25 +201,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: "flex",
-    gap: "50",
-    justifyContent: "space-between",
+    flexDirection: "column",
+    marginBottom: 18,
   },
   imageContainer: {
     flex: 1,
     display: "flex",
-    alignContent:"flex-end",
-    justifyContent:"flex-end",
-    // height:600
+    alignContent: "flex-end",
+    justifyContent: "flex-end",
+    height: 450,
   },
-  btn: {
-    fontSize: 20,
-    paddingVertical: 6,
-    fontWeight: "500",
-    textAlign: "center",
-    marginTop: 3,
-  },
-  btnContainer: {
-    backgroundColor: "white",
+  btnContainer1: {
     textAlign: "center",
     paddingTop: 2,
     width: 150,
@@ -216,11 +220,27 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 4,
+    borderColor: "#045036",
+    borderWidth: 3,
+    backgroundColor:'#007C4F'
+  },
+  btnContainer: {
+    textAlign: "center",
+    paddingTop: 2,
+    width: 150,
+    borderRadius: 14,
+    height: 55,
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+    borderColor: "#1A47A3",
+    borderWidth: 3,
+    backgroundColor:'#356ADB'
   },
   mainBtnContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent:'space-around',
+    justifyContent: "space-around",
     gap: 12,
     marginHorizontal: 10,
   },

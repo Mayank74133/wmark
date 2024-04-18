@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as SecureStore from "expo-secure-store";
-import Button from "../components/Button";
+import { AntDesign } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 
 export default function Page() {
@@ -21,7 +21,11 @@ export default function Page() {
     router.push("/selection");
   };
   return (
-    <View>
+    <View
+      style={{
+        marginTop: 10,
+      }}
+    >
       <Text style={mayank.text}>Enter Watermark Text</Text>
 
       <TextInput
@@ -41,6 +45,14 @@ export default function Page() {
         <Picker.Item label="Red" value="red" />
         <Picker.Item label="Blue" value="blue" />
         <Picker.Item label="Orange" value="orange" />
+        <Picker.Item label="Yellow" value="yellow" />
+        <Picker.Item label="Purple" value="purple" />
+        <Picker.Item label="Pink" value="pink" />
+        <Picker.Item label="Brown" value="brown" />
+        <Picker.Item label="Gray" value="gray" />
+        <Picker.Item label="Cyan" value="cyan" />
+        <Picker.Item label="Magenta" value="magenta" />
+        <Picker.Item label="Turquoise" value="turquoise" />
       </Picker>
 
       <Text style={mayank.text}>Pick Font Size </Text>
@@ -56,15 +68,40 @@ export default function Page() {
         <Picker.Item label="28" value="28" />
         <Picker.Item label="30" value="30" />
         <Picker.Item label="32" value="32" />
+        <Picker.Item label="34" value="34" />
+        <Picker.Item label="36" value="36" />
+        <Picker.Item label="38" value="38" />
+        <Picker.Item label="40" value="40" />
+
       </Picker>
 
       <Text style={mayank.text}>Your Text will appear like this ..</Text>
 
       <View style={mayank.text2}>
-        <Text style={prop}>{text}</Text>
+        <Text style={prop}>{text ? text : "Temporary Text"}</Text>
       </View>
 
-      <Button theme="primary" label="Submit Logo" onPress={handleBtn} />
+      <Pressable style={mayank.btnContainer} onPress={handleBtn}>
+        <Text
+          style={{
+            fontSize: 20,
+            paddingVertical: 6,
+            fontWeight: "500",
+            textAlign: "center",
+            marginTop: 1,
+            color: "#fff",
+            marginLeft: 30,
+          }}
+        >
+          Proceed{" "}
+        </Text>
+        <AntDesign
+          name="doubleright"
+          size={25}
+          color="#fff"
+          style={{ marginTop: 7 }}
+        />
+      </Pressable>
     </View>
   );
 }
@@ -73,6 +110,7 @@ const mayank = {
   text: {
     fontSize: 22,
     marginHorizontal: 12,
+    fontWeight: 600,
   },
   input: {
     height: 40,
@@ -88,5 +126,20 @@ const mayank = {
   },
   pick: {
     marginVertical: 0,
+  },
+  btnContainer: {
+    textAlign: "center",
+    paddingTop: 2,
+    width: 170,
+    borderRadius: 14,
+    height: 50,
+    display: "flex",
+    flexDirection: "row",
+    gap: 4,
+    borderColor: "#0073ff",
+    borderWidth: 3,
+    backgroundColor: "#0073cf",
+    marginHorizontal: 100,
+    marginVertical: 20,
   },
 };
