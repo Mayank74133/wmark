@@ -16,6 +16,9 @@ import { DotIndicator } from "react-native-indicators";
 import axios from "axios";
 import { FontAwesome6, AntDesign } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
+import { RNCamera } from 'react-native-camera';
+
+
 export default function Page(props) {
   const [loader, setLoader] = useState(false);
   const logoRef = useRef(null);
@@ -29,8 +32,6 @@ export default function Page(props) {
   const [wheight, setWheight] = useState(0);
 
   // Location
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [lct, setlct] = useState({});
 
   useEffect(() => {
@@ -167,7 +168,8 @@ export default function Page(props) {
                 }}
                 style={styles.imageContainer}
                 type={cameraType}
-              ></Camera>
+                responsiveOrientationWhenOrientationLocked = {true}
+              />
             </View>
           )}
           {!loader ? (
