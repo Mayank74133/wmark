@@ -5,9 +5,8 @@ import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
 import { Camera } from "expo-camera";
 import React from "react";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
-import Button from "../components/Button";
 import ImageViewer from "../components/ImageViewer";
 import EmojiSticker from "../components/EmojiSticker";
 const PlaceholderImage = require("../assets/images/logo_2.png");
@@ -28,9 +27,6 @@ export default function Page(props) {
   const [wwidth, setWwidth] = useState(0);
   const [wheight, setWheight] = useState(0);
 
-  // Location
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [lct, setlct] = useState({});
 
   useEffect(() => {
@@ -170,26 +166,22 @@ export default function Page(props) {
               ></Camera>
             </View>
           )}
-          {!loader ? (
-            <View>
-              <View style={styles.locationView}>
-                <Text style={styles.location}>{lct.street}</Text>
-                <Text style={styles.location}>{lct.postcode}</Text>
-                <Text style={styles.location}>{lct.city}</Text>
-                <Text style={styles.location}>{lct.state}</Text>
-                <Text style={styles.location}>{lct.country}</Text>
-              </View>
-              <EmojiSticker
-                imageSize={100}
-                stickerSource={pickedEmoji}
-                type={wType}
-                val={wVal}
-                valProp={wPrp}
-              />
+          <View>
+            <View style={styles.locationView}>
+              <Text style={styles.location}>{lct.street}</Text>
+              <Text style={styles.location}>{lct.postcode}</Text>
+              <Text style={styles.location}>{lct.city}</Text>
+              <Text style={styles.location}>{lct.state}</Text>
+              <Text style={styles.location}>{lct.country}</Text>
             </View>
-          ) : (
-            ""
-          )}
+            <EmojiSticker
+              imageSize={100}
+              stickerSource={pickedEmoji}
+              type={wType}
+              val={wVal}
+              valProp={wPrp}
+            />
+          </View>
         </View>
 
         {!loader ? (

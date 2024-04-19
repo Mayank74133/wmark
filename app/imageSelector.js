@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
@@ -13,6 +13,8 @@ import EmojiSticker from "../components/EmojiSticker";
 const PlaceholderImage = require("../assets/images/image.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
+import { Dimensions } from "react-native";
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function Page() {
   const [loader, setLoader] = useState(false);
@@ -24,6 +26,14 @@ export default function Page() {
   const [wType, setWType] = useState("");
   const [wVal, setWVal] = useState("");
   const [wPrp, setWPrp] = useState("");
+  const [wwidth, setWwidth] = useState(0);
+  const [wheight, setWheight] = useState(0);
+
+
+  useEffect(() => {
+    setWwidth(Dimensions.get("window").width - 20);
+    setWheight(Dimensions.get("window").height - 200);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -85,14 +95,14 @@ export default function Page() {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [4, 3],
       quality: 1,
-      height: 630,
-      width: 350,
+      height: wheight,
+      width: wwidth,
+
     });
 
     if (result) {
       temp.current = result.assets;
       setSelectedImage(result.assets[0].uri);
-      console.log(result.assets[0]);
       setLoader(1);
       if (temp.current.length == 1) {
         temp.current = null;
@@ -129,110 +139,98 @@ export default function Page() {
   const onSaveImageAsync = async () => {
     try {
       const localUri = await captureRef(imageRef, {
-        height: 630,
+        height: wheight,
+        wwidth: wwidth,
         quality: 1,
         format: "png",
       });
 
       await MediaLibrary.saveToLibraryAsync(localUri);
     } catch (e) {
-      console.log(e);
     }
   };
 
-  testing = { backgroundColor: "green" };
 
   return (
     <>
-      {!pickedEmoji ? (
-        <View
-          style={{
-            marginTop: 350,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 18,
-              alignSelf: "center",
-              fontWeight: "600",
-            }}
-          >
-            Please Upload a Logo{" "}
-          </Text>
-          <Button theme="primary" label="Upload Logo" onPress={loadLogo} />
+
+      <GestureHandlerRootView style={styles.container}>
+
+        <View style={styles.imageContainer}>
+          <Pressable style={{
+            padding: 3,
+            borderColor: "yellow",
+            borderWidth: 2,
+            borderRadius: 100,
+            width: 40
+          }} >
+            <FontAwesome6 name="backward" size={24} color="white" />
+          </Pressable>
+          <View ref={imageRef} collapsable={false}>
+            <ImageViewer
+              style={{
+                width: wwidth, height: wheight
+              }}
+              placeholderImageSource={PlaceholderImage}
+              selectedImage={selectedImage}
+            />
+            {!selectedImage ? (
+              <View
+                style={{
+                  height: wheight,
+                  width: wwidth
+                }}
+              ></View>
+            ) : (
+              ""
+            )}
+
+            <EmojiSticker
+              imageSize={100}
+              stickerSource={pickedEmoji}
+              type={wType}
+              val={wVal}
+              valProp={wPrp}
+            />
+
+          </View>
         </View>
-      ) : (
-        ""
-      )}
-      {pickedEmoji ? (
-        <GestureHandlerRootView style={styles.container}>
-          <View style={styles.imageContainer}>
-            <View ref={imageRef} collapsable={false}>
-              <ImageViewer
-                style={styles.imageContainer}
-                placeholderImageSource={PlaceholderImage}
-                selectedImage={selectedImage}
+
+        {!loader ? (
+          <View style={styles.footerContainer}>
+            <View>
+              <Button
+                theme="primary"
+                label="Select Images"
+                onPress={selectPicture}
               />
-              {!selectedImage ? (
-                <View
-                  style={{
-                    height: 630,
-                  }}
-                ></View>
-              ) : (
-                ""
-              )}
-              {pickedEmoji !== null ? (
-                <EmojiSticker
-                  imageSize={100}
-                  stickerSource={pickedEmoji}
-                  type={wType}
-                  val={wVal}
-                  valProp={wPrp}
-                />
-              ) : null}
+            </View>
+            <View style={styles.footerContainer2}>
+              <Button
+                theme="reset"
+                label="Reset Logo"
+                onPress={() => {
+                  router.replace("/");
+                }}
+              />
             </View>
           </View>
-
-          {!loader ? (
-            <View style={styles.footerContainer}>
-              <View>
-                <Button
-                  theme="primary"
-                  label="Select Images"
-                  onPress={selectPicture}
-                />
-              </View>
-              <View style={styles.footerContainer2}>
-                <Button
-                  theme="reset"
-                  label="Reset Logo"
-                  onPress={() => {
-                    router.replace("/");
-                  }}
-                />
-              </View>
-            </View>
-          ) : (
-            <View
-              style={{
-                backgroundColor: "white",
-                height: 100,
-                marginTop: 250,
-                marginBottom: 50,
-              }}
-            >
-              <DotIndicator
-                color="#00ff12"
-                style={{ backgroundColor: "#26282c" }}
-              />
-            </View>
-          )}
-        </GestureHandlerRootView>
-      ) : (
-        ""
-      )}
+        ) : (
+          <View
+            style={{
+              backgroundColor: "white",
+              height: 100,
+              marginTop: 250,
+              marginBottom: 50,
+            }}
+          >
+            <DotIndicator
+              color="#00ff12"
+              style={{ backgroundColor: "#26282c" }}
+            />
+          </View>
+        )}
+      </GestureHandlerRootView>
     </>
   );
 }
@@ -245,7 +243,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 5,
   },
   footerContainer: {
     paddingTop: 200,
@@ -256,7 +254,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginTop:20
+    marginTop: 20
   },
   optionsContainer: {
     position: "absolute",
