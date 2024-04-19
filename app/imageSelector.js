@@ -14,7 +14,7 @@ const PlaceholderImage = require("../assets/images/image.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
 import { Dimensions } from "react-native";
-import { FontAwesome6 } from '@expo/vector-icons';
+import { Entypo } from "@expo/vector-icons";
 
 export default function Page() {
   const [loader, setLoader] = useState(false);
@@ -28,7 +28,6 @@ export default function Page() {
   const [wPrp, setWPrp] = useState("");
   const [wwidth, setWwidth] = useState(0);
   const [wheight, setWheight] = useState(0);
-
 
   useEffect(() => {
     setWwidth(Dimensions.get("window").width - 20);
@@ -97,7 +96,6 @@ export default function Page() {
       quality: 1,
       height: wheight,
       width: wwidth,
-
     });
 
     if (result) {
@@ -146,30 +144,19 @@ export default function Page() {
       });
 
       await MediaLibrary.saveToLibraryAsync(localUri);
-    } catch (e) {
-    }
+    } catch (e) {}
   };
-
 
   return (
     <>
-
       <GestureHandlerRootView style={styles.container}>
-
         <View style={styles.imageContainer}>
-          <Pressable style={{
-            padding: 3,
-            borderColor: "yellow",
-            borderWidth: 2,
-            borderRadius: 100,
-            width: 40
-          }} >
-            <FontAwesome6 name="backward" size={24} color="white" />
-          </Pressable>
+          
           <View ref={imageRef} collapsable={false}>
             <ImageViewer
               style={{
-                width: wwidth, height: wheight
+                width: wwidth,
+                height: wheight,
               }}
               placeholderImageSource={PlaceholderImage}
               selectedImage={selectedImage}
@@ -178,7 +165,7 @@ export default function Page() {
               <View
                 style={{
                   height: wheight,
-                  width: wwidth
+                  width: wwidth,
                 }}
               ></View>
             ) : (
@@ -192,7 +179,6 @@ export default function Page() {
               val={wVal}
               valProp={wPrp}
             />
-
           </View>
         </View>
 
@@ -254,7 +240,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 20
+    marginTop: 20,
   },
   optionsContainer: {
     position: "absolute",
