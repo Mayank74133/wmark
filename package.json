@@ -28,7 +28,6 @@
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
     "react-native": "0.73.4",
-    "react-native-camera": "^4.2.1",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-image-marker": "^1.2.6",
     "react-native-indicators": "^0.17.0",
