@@ -22,7 +22,7 @@ export default function Page(props) {
   const logoRef = useRef(null);
   const [pickedEmoji, setPickedEmoji] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [wType, setWType] = useState("");
   const [wVal, setWVal] = useState("");
   const [wPrp, setWPrp] = useState("");
