@@ -32,7 +32,8 @@ export default function Page() {
 		})();
 
 		let prevLogo = SecureStore.getItemAsync('sessionData');
-		if (prevLogo != null) {
+		let prevText = SecureStore.getItemAsync('markText');
+		if (prevLogo != null || prevText != '') {
 			router.replace('/selection');
 		}
 
