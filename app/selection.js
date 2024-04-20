@@ -6,13 +6,33 @@ import cImg from "../public/images/camera.jpg";
 import gImg from "../public/images/gallery.jpg";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Page() {
   return (
-    <View style={{
-      flex:1
-    }}>
- 
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <Pressable
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginVertical: 2,
+          marginTop: 6,
+          alignItems: "flex-start",
+          width: "100%",
+          marginLeft: 3,
+        }}
+        onPress={() => {
+          router.replace("/");
+        }}
+      >
+        <Ionicons name="chevron-back-sharp" size={24} color="black" />
+        <Text style={{ color: "black", fontSize: 18 }}>Back</Text>
+      </Pressable>
+
       <View
         style={{
           flex: 1,
@@ -25,12 +45,12 @@ export default function Page() {
           style={{
             display: "flex",
             flexDirection: "row",
-            marginHorizontal:10,
-            gap:35,
-            backgroundColor:'#F7F6F5',
-            flex:1,
-            justifyContent:"center",
-            alignItems:"center"
+            marginHorizontal: 10,
+            gap: 35,
+            backgroundColor: "#F7F6F5",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Image source={gImg} style={styles.Image} />
@@ -63,12 +83,12 @@ export default function Page() {
           style={{
             display: "flex",
             flexDirection: "row-reverse",
-            gap:35,
-            marginHorizontal:10,
-            backgroundColor:'#ECEAE8',
-            flex:1,
-            justifyContent:"center",
-            alignItems:"center"
+            gap: 35,
+            marginHorizontal: 10,
+            backgroundColor: "#ECEAE8",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Image source={cImg} style={styles.Image} />

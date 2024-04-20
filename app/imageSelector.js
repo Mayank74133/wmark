@@ -14,8 +14,11 @@ const PlaceholderImage = require("../assets/images/image.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
 import { Dimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome6, AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-
+import { FontAwesome } from "@expo/vector-icons";
 export default function Page() {
   const [loader, setLoader] = useState(false);
   const itrRef = useRef(0);
@@ -148,76 +151,114 @@ export default function Page() {
   };
 
   return (
-    <>
-      <GestureHandlerRootView style={styles.container}>
-        <View style={styles.imageContainer}>
-          
-          <View ref={imageRef} collapsable={false}>
-            <ImageViewer
+    <GestureHandlerRootView style={styles.container}>
+      <Pressable
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginVertical: 2,
+          marginTop: 6,
+          alignItems: "flex-start",
+          width: "100%",
+          marginLeft: 3,
+        }}
+        onPress={() => {
+          router.replace("/selection");
+        }}
+      >
+        <Ionicons name="chevron-back-sharp" size={24} color="white" />
+        <Text style={{ color: "white", fontSize: 18 }}>Back</Text>
+      </Pressable>
+      <View style={styles.imageContainer}>
+        <View ref={imageRef} collapsable={false}>
+          <ImageViewer
+            style={{
+              width: wwidth,
+              height: wheight,
+            }}
+            placeholderImageSource={PlaceholderImage}
+            selectedImage={selectedImage}
+          />
+          {!selectedImage ? (
+            <View
               style={{
-                width: wwidth,
                 height: wheight,
+                width: wwidth,
               }}
-              placeholderImageSource={PlaceholderImage}
-              selectedImage={selectedImage}
-            />
-            {!selectedImage ? (
+            ></View>
+          ) : (
+            ""
+          )}
+
+          <EmojiSticker
+            imageSize={100}
+            stickerSource={pickedEmoji}
+            type={wType}
+            val={wVal}
+            valProp={wPrp}
+          />
+        </View>
+      </View>
+
+      {!loader ? (
+        <View style={styles.footerContainer}>
+          <View>
+            <Pressable style={styles.btnContainer} onPress={selectPicture}>
+              <MaterialIcons
+                name="browse-gallery"
+                size={25}
+                color="#fff"
+                style={{ marginTop: 7, marginLeft: 13 }}
+              />
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingVertical: 6,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  marginTop: 1,
+                  color: "#fff",
+                }}
+              >
+                Choose Image
+              </Text>
+            </Pressable>
+          </View>
+          <View style={styles.footerContainer2}>
+            <Pressable
+              onPress={() => {
+                router.replace("/");
+              }}
+            >
               <View
                 style={{
-                  height: wheight,
-                  width: wwidth,
+                  padding: 9,
+                  borderWidth: 2,
+                  borderRadius: 11,
+                  borderColor: "white",
                 }}
-              ></View>
-            ) : (
-              ""
-            )}
-
-            <EmojiSticker
-              imageSize={100}
-              stickerSource={pickedEmoji}
-              type={wType}
-              val={wVal}
-              valProp={wPrp}
-            />
+              >
+                <FontAwesome name="exchange" size={16} color="white" />
+              </View>
+            </Pressable>
           </View>
         </View>
-
-        {!loader ? (
-          <View style={styles.footerContainer}>
-            <View>
-              <Button
-                theme="primary"
-                label="Select Images"
-                onPress={selectPicture}
-              />
-            </View>
-            <View style={styles.footerContainer2}>
-              <Button
-                theme="reset"
-                label="Reset Logo"
-                onPress={() => {
-                  router.replace("/");
-                }}
-              />
-            </View>
-          </View>
-        ) : (
-          <View
-            style={{
-              backgroundColor: "white",
-              height: 100,
-              marginTop: 250,
-              marginBottom: 50,
-            }}
-          >
-            <DotIndicator
-              color="#00ff12"
-              style={{ backgroundColor: "#26282c" }}
-            />
-          </View>
-        )}
-      </GestureHandlerRootView>
-    </>
+      ) : (
+        <View
+          style={{
+            backgroundColor: "white",
+            height: 50,
+            marginTop: 250,
+            marginBottom: 10,
+          }}
+        >
+          <DotIndicator
+            color="#00ff12"
+            style={{ backgroundColor: "#26282c" }}
+          />
+        </View>
+      )}
+    </GestureHandlerRootView>
   );
 }
 
@@ -235,20 +276,31 @@ const styles = StyleSheet.create({
     paddingTop: 200,
     flex: 1 / 3,
     alignItems: "center",
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "flex-end",
+    width: "100%",
   },
   footerContainer2: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 34,
+    marginLeft: 30,
+    marginRight: 45,
   },
-  optionsContainer: {
-    position: "absolute",
-    bottom: 80,
-  },
-  optionsRow: {
-    alignItems: "center",
+
+  btnContainer: {
+    textAlign: "center",
+    paddingTop: 2,
+    width: 180,
+    borderRadius: 14,
+    height: 50,
+    display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    gap: 4,
+    borderWidth: 3,
+    backgroundColor: "#4B9CD3",
+    marginTop: 35,
   },
 });

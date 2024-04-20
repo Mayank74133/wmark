@@ -15,6 +15,8 @@ import { DotIndicator } from "react-native-indicators";
 import axios from "axios";
 import { FontAwesome6, AntDesign } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
 export default function Page(props) {
   const [loader, setLoader] = useState(false);
   const logoRef = useRef(null);
@@ -137,6 +139,23 @@ export default function Page(props) {
 
   return (
     <GestureHandlerRootView style={styles.container}>
+      <Pressable
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginVertical: 2,
+          marginTop: 6,
+          alignItems: "flex-start",
+          width: "100%",
+          marginLeft: 3,
+        }}
+        onPress={() => {
+          router.replace("/selection");
+        }}
+      >
+        <Ionicons name="chevron-back-sharp" size={24} color="white" />
+        <Text style={{ color: "white", fontSize: 18 }}>Back</Text>
+      </Pressable>
       <View>
         <View
           ref={imageRef}

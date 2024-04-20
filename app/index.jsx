@@ -92,9 +92,7 @@ export default function Page() {
       );
       await SecureStore.setItemAsync("wType", "Image");
       router.replace("/selection"); // change this too
-    } else {
-      alert("You did not select any Logo.");
-    }
+    } 
   };
 
   const [status, requestPermission] = MediaLibrary.usePermissions();
