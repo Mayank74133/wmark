@@ -14,6 +14,8 @@ import bgImg from '../public/images/1234.jpeg';
 import bg_img from '../public/images/bg_image.jpg';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
+import Toast from 'react-native-root-toast';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function Page() {
 	const logoRef = useRef(null);
@@ -33,8 +35,22 @@ export default function Page() {
 
 		let prevLogo = SecureStore.getItemAsync('sessionData');
 		let prevText = SecureStore.getItemAsync('markText');
-		if (prevLogo != null || prevText != '') {
-			router.replace('/selection');
+
+    
+    if (prevLogo != null || prevText != '') {
+      let toast=Toast.show('Loading Your previous Logo Data .', {
+        duration: Toast.durations.LONG,
+        position:Toast.positions.BOTTOM,
+        animation:true,
+        hideOnPress:true,
+        shadow:true,
+        backgroundColor:'black',
+        textColor:'white'
+      });		
+      setTimeout(()=>{
+        Toast.hide(toast);
+        router.push('/selection');
+      },3000);
 		}
 
 		(async () => {
@@ -107,7 +123,7 @@ export default function Page() {
 	}
 
 	return (
-		<View style={{ flex: 1 }}>
+		<RootSiblingParent style={{ flex: 1 }}>
 			<View>
 				<Text
 					style={{
@@ -192,7 +208,7 @@ export default function Page() {
 					</Pressable>
 				</View>
 			</View>
-		</View>
+		</RootSiblingParent>
 	);
 }
 
