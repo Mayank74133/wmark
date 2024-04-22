@@ -16,8 +16,6 @@ import { DotIndicator } from "react-native-indicators";
 import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome6, AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 export default function Page() {
   const [loader, setLoader] = useState(false);
@@ -147,7 +145,7 @@ export default function Page() {
       });
 
       await MediaLibrary.saveToLibraryAsync(localUri);
-    } catch (e) {}
+    } catch (e) { }
   };
 
   return (
@@ -226,8 +224,8 @@ export default function Page() {
           </View>
           <View style={styles.footerContainer2}>
             <Pressable
-              onPress={async() => {
-                await SecureStore.setItemAsyncetItemAsync("sessionData", null);
+              onPress={async () => {
+                await SecureStore.setItemAsync("sessionData", "");
                 await SecureStore.setItemAsync("markText", "");
                 router.replace("/");
               }}

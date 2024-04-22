@@ -15,7 +15,7 @@ export default function Page() {
         flex: 1,
       }}
     >
-      <Pressable
+      {/* <Pressable
         style={{
           display: "flex",
           flexDirection: "row",
@@ -31,7 +31,7 @@ export default function Page() {
       >
         <Ionicons name="chevron-back-sharp" size={24} color="black" />
         <Text style={{ color: "black", fontSize: 18 }}>Back</Text>
-      </Pressable>
+      </Pressable> */}
 
       <View
         style={{

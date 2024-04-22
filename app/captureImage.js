@@ -12,9 +12,11 @@ import EmojiSticker from "../components/EmojiSticker";
 const PlaceholderImage = require("../assets/images/logo_2.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
-import { FontAwesome6, AntDesign } from "@expo/vector-icons";
+import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+
 
 export default function Page(props) {
   const [loader, setLoader] = useState(false);
@@ -185,13 +187,6 @@ export default function Page(props) {
             </View>
           )}
           <View>
-            <View style={styles.locationView}>
-              <Text style={styles.location}>{lct.street}</Text>
-              <Text style={styles.location}>{lct.postcode}</Text>
-              <Text style={styles.location}>{lct.city}</Text>
-              <Text style={styles.location}>{lct.state}</Text>
-              <Text style={styles.location}>{lct.country}</Text>
-            </View>
             <EmojiSticker
               imageSize={100}
               stickerSource={pickedEmoji}
@@ -205,7 +200,7 @@ export default function Page(props) {
         {!loader ? (
           <View style={styles.footerContainer2}>
             <Pressable
-              onPress={async() => {
+              onPress={async () => {
                 await SecureStore.setItemAsync("sessionData", "");
                 await SecureStore.setItemAsync("markText", "");
                 router.replace("/");
@@ -219,7 +214,8 @@ export default function Page(props) {
                   borderColor: "yellow",
                 }}
               >
-                <AntDesign name="upload" size={20} color="white" />
+                <FontAwesome name="exchange" size={16} color="white" />
+
               </View>
             </Pressable>
             <Pressable onPress={takePicture}>
