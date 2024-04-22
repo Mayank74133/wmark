@@ -226,7 +226,9 @@ export default function Page() {
           </View>
           <View style={styles.footerContainer2}>
             <Pressable
-              onPress={() => {
+              onPress={async() => {
+                await SecureStore.setItemAsyncetItemAsync("sessionData", null);
+                await SecureStore.setItemAsync("markText", "");
                 router.replace("/");
               }}
             >

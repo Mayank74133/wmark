@@ -31,13 +31,14 @@ export default function Page() {
 			if (status !== 'granted') {
 				alert('Permission to access camera was denied');
 			}
-		})();
-
-		let prevLogo = SecureStore.getItemAsync('sessionData');
-		let prevText = SecureStore.getItemAsync('markText');
+      
+		let prevLogo = await SecureStore.getItemAsync('sessionData');
+		let prevText = await SecureStore.getItemAsync('markText');
 
     
-    if (prevLogo != null || prevText != '') {
+    if (prevLogo != '' || prevText != '') {
+      console.log(prevLogo);
+      console.log(prevText);
       let toast=Toast.show('Loading Your previous Logo Data .', {
         duration: Toast.durations.LONG,
         position:Toast.positions.BOTTOM,
@@ -52,6 +53,8 @@ export default function Page() {
         router.push('/selection');
       },3000);
 		}
+		})();
+
 
 		(async () => {
 			let { status } = await Location.requestForegroundPermissionsAsync();

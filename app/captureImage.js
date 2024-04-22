@@ -12,7 +12,6 @@ import EmojiSticker from "../components/EmojiSticker";
 const PlaceholderImage = require("../assets/images/logo_2.png");
 import * as SecureStore from "expo-secure-store";
 import { DotIndicator } from "react-native-indicators";
-import axios from "axios";
 import { FontAwesome6, AntDesign } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -206,7 +205,9 @@ export default function Page(props) {
         {!loader ? (
           <View style={styles.footerContainer2}>
             <Pressable
-              onPress={() => {
+              onPress={async() => {
+                await SecureStore.setItemAsync("sessionData", "");
+                await SecureStore.setItemAsync("markText", "");
                 router.replace("/");
               }}
             >
