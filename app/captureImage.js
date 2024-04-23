@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, Text, Pressable, PixelRatio } from "react-native";
+import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as MediaLibrary from "expo-media-library";
 import { captureRef } from "react-native-view-shot";
@@ -16,7 +16,7 @@ import { FontAwesome6, FontAwesome } from "@expo/vector-icons";
 import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-
+import * as IntentLauncher from 'expo-intent-launcher';
 
 export default function Page(props) {
   const [loader, setLoader] = useState(false);
@@ -43,7 +43,7 @@ export default function Page(props) {
 
   useEffect(() => {
     setWwidth(Dimensions.get("window").width - 20);
-    setWheight(Dimensions.get("window").height - 200);
+    setWheight(Dimensions.get("window").height - 150);
   }, []);
 
   useEffect(() => {
@@ -52,9 +52,6 @@ export default function Page(props) {
       const tempData = await SecureStore.getItemAsync("Property");
       const tempData1 = await SecureStore.getItemAsync("markText");
       const tempData2 = await SecureStore.getItemAsync("wType");
-      const templocation = await SecureStore.getItemAsync("datalct");
-      setlct(JSON.parse(templocation));
-      console.log(templocation);
 
       setWPrp(JSON.parse(tempData));
       setWVal(tempData1);
@@ -138,25 +135,69 @@ export default function Page(props) {
     onReset();
   };
 
+  const openGallery = async () => {
+    if (Platform.OS == "ios") {
+      Linking.openURL("photos-redirect://");
+    } else {
+      await IntentLauncher.startActivityAsync("android.intent.action.MAIN", {
+        category: "android.intent.category.APP_GALLERY",
+      });
+    }
+  };
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Pressable
+      <View
         style={{
           display: "flex",
           flexDirection: "row",
-          marginVertical: 2,
-          marginTop: 6,
-          alignItems: "flex-start",
-          width: "100%",
-          marginLeft: 3,
-        }}
-        onPress={() => {
-          router.replace("/selection");
+          justifyContent: "space-between",
+          width: "90%",
         }}
       >
-        <Ionicons name="chevron-back-sharp" size={24} color="white" />
-        <Text style={{ color: "white", fontSize: 18 }}>Back</Text>
-      </Pressable>
+        <Pressable
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginVertical: 2,
+            marginTop: 6,
+            alignItems: "flex-start",
+            marginLeft: 3,
+            borderWidth: 2,
+            borderColor: "yellow",
+            borderRadius: 100,
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+          }}
+          onPress={() => {
+            router.replace("/selection");
+          }}
+        >
+          <Ionicons name="chevron-back-sharp" size={19} color="white" />
+          <Text style={{ color: "white", fontSize: 14 }}>Back</Text>
+        </Pressable>
+        <Pressable
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            marginVertical: 2,
+            marginTop: 6,
+            alignItems: "flex-start",
+            marginLeft: 3,
+            borderWidth: 2,
+            borderColor: "yellow",
+            borderRadius: 100,
+            paddingHorizontal: 10,
+            paddingVertical: 6,
+          }}
+          onPress={async () => {
+            await SecureStore.setItemAsync("sessionData", "");
+            await SecureStore.setItemAsync("markText", "");
+            router.replace("/");
+          }}
+        >
+          <Text style={{ color: "white", fontSize: 14 }}>Reset Logo</Text>
+        </Pressable>
+      </View>
       <View>
         <View
           ref={imageRef}
@@ -199,13 +240,7 @@ export default function Page(props) {
 
         {!loader ? (
           <View style={styles.footerContainer2}>
-            <Pressable
-              onPress={async () => {
-                await SecureStore.setItemAsync("sessionData", "");
-                await SecureStore.setItemAsync("markText", "");
-                router.replace("/");
-              }}
-            >
+            <Pressable onPress={openGallery}>
               <View
                 style={{
                   padding: 9,
@@ -214,7 +249,7 @@ export default function Page(props) {
                   borderColor: "yellow",
                 }}
               >
-                <FontAwesome name="exchange" size={16} color="white" />
+              <Ionicons name="grid" size={16} color="white" />
 
               </View>
             </Pressable>

@@ -45,8 +45,7 @@ export default function Page() {
           style={{
             display: "flex",
             flexDirection: "row",
-            marginHorizontal: 10,
-            gap: 35,
+            gap: 25,
             backgroundColor: "#F7F6F5",
             flex: 1,
             justifyContent: "center",
@@ -73,7 +72,7 @@ export default function Page() {
                   color: "#fff",
                 }}
               >
-                Browse Image{" "}
+                Browse Photos{" "}
               </Text>
             </Pressable>
           </Link>
@@ -83,8 +82,7 @@ export default function Page() {
           style={{
             display: "flex",
             flexDirection: "row-reverse",
-            gap: 35,
-            marginHorizontal: 10,
+            gap: 25,
             backgroundColor: "#ECEAE8",
             flex: 1,
             justifyContent: "center",
@@ -110,7 +108,7 @@ export default function Page() {
                   color: "#fff",
                 }}
               >
-                Capture Image
+                Take an Image
               </Text>
             </Pressable>
           </Link>

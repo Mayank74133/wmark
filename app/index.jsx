@@ -37,9 +37,7 @@ export default function Page() {
 
     
     if (prevLogo != '' || prevText != '') {
-      console.log(prevLogo);
-      console.log(prevText);
-      let toast=Toast.show('Loading Your previous Logo Data .', {
+      let toast=Toast.show('Loading ....', {
         duration: Toast.durations.LONG,
         position:Toast.positions.BOTTOM,
         animation:true,
