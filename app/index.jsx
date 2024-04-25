@@ -22,8 +22,6 @@ export default function Page() {
 	const [pickedEmoji, setPickedEmoji] = useState(null);
 
 	// Location
-	const [location, setLocation] = useState(null);
-	const [errorMsg, setErrorMsg] = useState(null);
 
 	useEffect(() => {
 		(async () => {
@@ -36,8 +34,12 @@ export default function Page() {
 		let prevText = await SecureStore.getItemAsync('markText');
 
     
-    if (prevLogo != '' || prevText != '') {
-      let toast=Toast.show('Loading ....', {
+    if (prevLogo != '' || prevText != '' ) {
+    
+		console.log(prevLogo);
+		console.log(prevText);
+	
+		let toast=Toast.show('Loading ....', {
         duration: Toast.durations.LONG,
         position:Toast.positions.BOTTOM,
         animation:true,
@@ -53,49 +55,6 @@ export default function Page() {
 		}
 		})();
 
-
-		(async () => {
-			let { status } = await Location.requestForegroundPermissionsAsync();
-			if (status !== 'granted') {
-				setErrorMsg('Permission to access location was denied');
-				return;
-			}
-
-			let location = await Location.getCurrentPositionAsync({});
-			setLocation(location);
-
-			try {
-				await axios
-					.get('https://api.geoapify.com/v1/geocode/reverse', {
-						params: {
-							apiKey: '5d740836e3cb44d4896d132256a44e71',
-							lon: location.coords.longitude,
-							lat: location.coords.latitude,
-						},
-					})
-					.then((res) => {
-						let data = {
-							street: res.data.features[0].properties.street
-								? res.data.features[0].properties.street
-								: '' + ', ' + res.data.features[0].properties.name
-								? res.data.features[0].properties.name
-								: '' + ', ' + res.data.features[0].properties.housenumber
-								? res.data.features[0].properties.housenumber
-								: '',
-							postcode: res.data.features[0].properties.postcode,
-							city: res.data.features[0].properties.city,
-							state: res.data.features[0].properties.state,
-							country: res.data.features[0].properties.country,
-						};
-
-						setTimeout(async () => {
-							await SecureStore.setItemAsync('datalct', JSON.stringify(data));
-						}, 500);
-					});
-			} catch (err) {
-				console.log('error coming is : ', err);
-			}
-		})();
 	}, []);
 
 	const loadLogo = async () => {

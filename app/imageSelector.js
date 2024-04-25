@@ -62,33 +62,10 @@ export default function Page() {
       setWVal(tempData1);
       setWType(tempData2);
 
-      if (sessionData === null) {
-        loadLogo();
-      } else {
-        setPickedEmoji(sessionData);
-      }
     })();
   }, []);
 
-  const loadLogo = async () => {
-    setPickedEmoji(null);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setPickedEmoji(result.assets[0].uri.toString());
-      logoRef.current = result.assets[0].uri.toString();
-      await SecureStore.setItemAsync(
-        "sessionData",
-        result.assets[0].uri.toString()
-      );
-    } else {
-      alert("You did not select any Logo.");
-    }
-  };
-
+ 
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const imageRef = useRef();
 
